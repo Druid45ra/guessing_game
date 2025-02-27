@@ -8,15 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Start joc nou la încărcare
   fetch("http://localhost:5000/start")
-    .then((response) => {
-      if (!response.ok) throw new Error("Server error");
-      return response.json();
-    })
-    .then((data) => (message.textContent = data.message))
-    .catch((error) => (message.textContent = "Error starting game!"));
+    .then((response) => response.json())
+    .then((data) => (message.textContent = data.message));
 
   guessButton.addEventListener("click", () => {
-    const guess = Number(guessInput.value);
+    const guess = guessInput.value;
     if (guess < 1 || guess > 100) {
       message.textContent = "Please enter a number between 1 and 100!";
       return;
@@ -27,14 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ guess }),
     })
-      .then((response) => {
-        if (!response.ok) throw new Error("Server error");
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
         attemptsDisplay.textContent = `Attempts: ${data.attempts}`;
         if (data.result === "correct") {
-          message.textContent = "Congratulations! You guessed it!";
+          message.textContent = `Congratulations! You guessed it!`;
           scoreDisplay.textContent = `Score: ${data.score}`;
           guessButton.disabled = true;
         } else if (data.result === "too_low") {
@@ -42,23 +35,18 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           message.textContent = "Too high! Try again.";
         }
-      })
-      .catch((error) => (message.textContent = "Error submitting guess!"));
+      });
   });
 
   restartButton.addEventListener("click", () => {
     fetch("http://localhost:5000/start")
-      .then((response) => {
-        if (!response.ok) throw new Error("Server error");
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
         message.textContent = data.message;
         attemptsDisplay.textContent = "Attempts: 0";
         scoreDisplay.textContent = "Score: -";
         guessButton.disabled = false;
         guessInput.value = "";
-      })
-      .catch((error) => (message.textContent = "Error restarting game!"));
+      });
   });
 });
