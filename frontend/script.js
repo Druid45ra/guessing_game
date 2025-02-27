@@ -6,14 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const attemptsDisplay = document.getElementById("attempts");
   const scoreDisplay = document.getElementById("score");
 
-  // Start joc nou la încărcare
+  // Start new game on load
   fetch("http://localhost:5000/start")
     .then((response) => response.json())
     .then((data) => (message.textContent = data.message));
 
   guessButton.addEventListener("click", () => {
-    const guess = guessInput.value;
-    if (guess < 1 || guess > 100) {
+    const guess = parseInt(guessInput.value, 10);
+    if (isNaN(guess) || guess < 1 || guess > 100) {
       message.textContent = "Please enter a number between 1 and 100!";
       return;
     }
